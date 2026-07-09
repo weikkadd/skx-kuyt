@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'java/pox.yml'
+      - 'java/pom.xml'
       - 'java/src/main/java/dev/sbxnative/App.java'
   workflow_dispatch:
 
