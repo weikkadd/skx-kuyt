@@ -1,0 +1,69 @@
+name: Weirdhost 自动续期
+
+# 每天 UTC 04:20 自动跑一次（韩国时间 13:20），也可手动触发
+on:
+  schedule:
+    - cron: '20 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  renew:
+    name: 多账号续期
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      actions: write
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 安装系统依赖（xvfb 用于无头浏览器）
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb x11-utils fonts-nanum fonts-noto-cjk xdotool scrot
+
+      - name: 安装 Python 依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install seleniumbase aiohttp pynacl
+
+      - name: 运行续期脚本
+        env:
+          # 最多支持 5 个 Weirdhost 账号，按需填写到 Secrets
+          WEIRDHOST_COOKIE_1: ${{ secrets.WEIRDHOST_COOKIE_1 }}
+          WEIRDHOST_COOKIE_2: ${{ secrets.WEIRDHOST_COOKIE_2 }}
+          WEIRDHOST_COOKIE_3: ${{ secrets.WEIRDHOST_COOKIE_3 }}
+          WEIRDHOST_COOKIE_4: ${{ secrets.WEIRDHOST_COOKIE_4 }}
+          WEIRDHOST_COOKIE_5: ${{ secrets.WEIRDHOST_COOKIE_5 }}
+          # 用于自动刷新 cookie（可选，但强烈推荐配置）
+          REPO_TOKEN: ${{ secrets.REPO_TOKEN }}
+          # 失败通知（可选）
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" python scripts/weirdhost_renew.py
+
+      - name: 上传调试截图（失败时保留 3 天）
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-screenshots
+          path: "*.png"
+          retention-days: 3
+
+      - name: 清理旧的工作流运行记录
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          delete_workflow_pattern: ${{ github.workflow }}
+          retain_days: 0
+          keep_minimum_runs: 3
