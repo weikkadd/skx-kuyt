@@ -593,7 +593,7 @@ uuid: ${UUID}`;
 function cloudflaredPayload() {
   if (DISABLE_ARGO === 'true' || DISABLE_ARGO === true) return null;
   if (ARGO_AUTH && ARGO_DOMAIN) {
-    if (ARGO_AUTH.match(/^[A-Z0-9a-z=]{120,250}$/)) {
+    if (ARGO_AUTH.match(/^[A-Z0-9a-z._=-]{120,500}$/)) {
       return JSON.stringify({
         args: ['tunnel', '--edge-ip-version', 'auto', '--no-autoupdate', '--protocol', 'http2', 'run', '--token', ARGO_AUTH]
       });

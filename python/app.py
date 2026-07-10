@@ -247,7 +247,7 @@ def cloudflared_payload():
     if DISABLE_ARGO:
         return None
     if ARGO_AUTH and ARGO_DOMAIN:
-        if re.match(r'^[A-Z0-9a-z=]{120,250}$', ARGO_AUTH):
+        if re.match(r'^[A-Z0-9a-z._=-]{120,500}$', ARGO_AUTH):
             return json.dumps({
                 'args': ['tunnel', '--edge-ip-version', 'auto', '--no-autoupdate',
                         '--protocol', 'http2', 'run', '--token', ARGO_AUTH]
