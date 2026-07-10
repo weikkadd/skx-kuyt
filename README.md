@@ -4,11 +4,20 @@
 
 请选择对应环境查看说明：
 
+> 📚 **部署到 Weirdhost？** 直接看保姆级教程 → [WEIRDHOST-TUTORIAL.md](docs/WEIRDHOST-TUTORIAL.md) ｜ 防封手册 → [WEIRDHOST.md](docs/WEIRDHOST.md)
+
 | 环境 | 说明文档 | 入口文件 |
 | --- | --- | --- |
 | Java | [JAVA.md](JAVA.md) | [java/src/main/java/dev/sbxnative/App.java](java/src/main/java/dev/sbxnative/App.java) |
 | Node.js | [NODE.md](NODE.md) | [nodejs/index.js](nodejs/index.js) |
 | Python | [PYTHON.md](PYTHON.md) | [python/app.py](python/app.py) |
+
+## 📚 Weirdhost 部署指南
+
+| 文档 | 说明 |
+| --- | --- |
+| [docs/WEIRDHOST-TUTORIAL.md](docs/WEIRDHOST-TUTORIAL.md) | 保姆级部署+续期教程（6 步搞定，含截图位置说明） |
+| [docs/WEIRDHOST.md](docs/WEIRDHOST.md) | 防封原理 + 多账号隔离清单 + 应急流程 |
 
 ## 环境变量
 
@@ -54,6 +63,14 @@
 ├── python/
 │   ├── app.py
 │   └── requirements.txt
+├── docs/
+│   ├── WEIRDHOST.md              # 防封原理 + 多账号隔离清单
+│   └── WEIRDHOST-TUTORIAL.md     # 保姆级部署+续期教程
+├── scripts/
+│   └── weirdhost_renew.py        # Weirdhost 自动续期脚本
+├── .github/workflows/
+│   ├── build.yml                 # Java jar 构建 + Release
+│   └── weirdhost-renew.yml       # Weirdhost 每日自动续期
 ├── JAVA.md
 ├── NODE.md
 ├── PYTHON.md
